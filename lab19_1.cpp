@@ -3,6 +3,8 @@
 #include<vector>
 #include<string>
 #include<cstdlib>
+#include<cstring>
+
 
 using namespace std;
 
@@ -20,20 +22,77 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
+void importDataFromFile(string filename, vector<string> &names,vector<int> &scores ,vector<char> &grades){
+    char name[100];
+    int a, b, c, x;
+    ifstream myfile(filename);
+    string s;
+    while(getline(myfile,s))
+    {
+        string z = s;
+        char *text = new char[z.size() + 1];
+        char format[] = "%[^:]: %d %d %d";
+        strcpy(text,z.c_str());
+        sscanf(text,format,name,&a,&b,&c);
+        x = a + b + c;
+        names.push_back(name);
+        scores.push_back(x);
+        grades.push_back(score2grade(x));
+
+    }
 
 }
 
-void getCommand(){
+void getCommand(string &command, string &key){
+    cout << "Please input your command: ";
+    cin  >> command;
+    if(toUpperStr(command) == "NAME" || toUpperStr(command) == "GRADE")
+    {
+        cin.ignore();
+        getline(cin,key);
+    }
 
 }
 
-void searchName(){
-
+void searchName(vector<string> names,vector<int> scores ,vector<char> grades, string key){
+    bool check = false;
+    cout << "---------------------------------\n";
+        for(unsigned int i = 0 ; i < names.size() ; i++)
+        {
+           if(toUpperStr(key) == toUpperStr(names.at(i)))
+           {
+           check = true;
+           cout << names.at(i) << "'s " << "score = " <<  scores.at(i) << endl;
+           cout << names.at(i) << "'s " << "grade = " <<  grades.at(i) << endl; 
+           }
+        }
+        if(check == false)
+        {
+            cout << "Cannot found. " << endl;
+        }
+    cout << "---------------------------------\n";
 }
 
-void searchGrade(){
+void searchGrade(vector<string> names,vector<int> scores ,vector<char> grades, string key){
+    const char *x = key.c_str();
+    bool check = false;
+    cout << "---------------------------------\n";
+    for(unsigned int i = 0 ; i < names.size() ; i++)
+    {
+        if(*x == grades.at(i))
+        {
+            check = true;
+            cout << names.at(i) << " " << "("<< scores.at(i) <<")" << endl;
+            
+        }
+    }
+        if(check == false)
+        {
+            cout << "Cannot found" << endl;
+        }
+    cout << "---------------------------------\n";
 
+    
 }
 
 
